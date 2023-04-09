@@ -1,19 +1,22 @@
 import { Box, Container, Heading } from "@chakra-ui/react";
 import Head from "next/head";
-import React, { useEffect, useState } from "react";
-import { getOrders } from "../utils/api";
-import Product from "@/components/Products/Product";
-import { IFullOrder } from "@/types/IFullOreder";
+import React, { useEffect } from "react";
 import localStoreHelper from "@/utils/localStoreHelper";
 import { IUser } from "@/types/IUser";
 import { LOCAL_STORAGE_KEYS, PAGE_ROUTES } from "@/utils/constanats";
 import { useRouter } from "next/router";
 import OrdersEventStream from "@/utils/ordersSse";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { fetchOrders } from "@/store/reducers/orders";
+import { setOrders } from "@/store/reducers/orders";
+import Product from "@/components/Products/Product";
 
 const Orders = () => {
   const router = useRouter();
-  const [orders, setOrders] = useState<IFullOrder[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const dispatch = useDispatch();
+  const ordersState = useSelector((state: RootState) => state.orders);
 
   useEffect(() => {
     const localStoreUser = localStoreHelper.getLocalStorageItem<IUser>(
@@ -23,20 +26,11 @@ const Orders = () => {
     const ordersEventStream = new OrdersEventStream();
 
     if (localStoreUser) {
-      const fetchOrders = async () => {
-        try {
-          const orders = await getOrders(localStoreUser);
-          setOrders(orders);
-          setIsLoading(false);
-        } catch (error) {
-          console.error(error);
-        }
-      };
+      dispatch(fetchOrders());
 
-      fetchOrders();
       ordersEventStream.connect();
       ordersEventStream.subscribe((order) => {
-        setOrders(order);
+        dispatch(setOrders(order));
       });
     } else {
       router.push(PAGE_ROUTES.login);
@@ -46,7 +40,7 @@ const Orders = () => {
       ordersEventStream.unsubscribe();
       ordersEventStream.disconnect();
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <Box>
@@ -57,12 +51,12 @@ const Orders = () => {
         <Heading as="h1" size="lg" mb={4}>
           Your Orders
         </Heading>
-        {isLoading ? (
+        {ordersState.isLoading ? (
           <p>Loading...</p>
-        ) : orders.length === 0 ? (
+        ) : ordersState.orders.length === 0 ? (
           <p>You have no orders yet.</p>
         ) : (
-          <Product products={orders} isOrderItem />
+          <Product products={ordersState.orders} isOrderItem />
         )}
       </Container>
     </Box>
