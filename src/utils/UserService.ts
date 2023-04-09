@@ -69,7 +69,7 @@ export class GoogleMapsAdapter implements GeoLocation, GeoCoder {
     const response = await fetch(url);
     const data = await response.json();
 
-    if (true) {
+    if (data.status === "OK") {
       const addressComponents = data.results[0].address_components;
       const streetNumber =
         addressComponents.find((comp: IAddressComponent) =>
