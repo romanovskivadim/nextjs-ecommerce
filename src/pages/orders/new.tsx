@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { useGetCartItems } from "../../../hooks/useGetCartItems";
 import { createOrder } from "@/utils/api";
 import { useState } from "react";
+import AddressDisplay from "@/components/AddressDisplay/AddressDisplay";
 
 const NewOrder = () => {
   const router = useRouter();
@@ -84,6 +85,7 @@ const NewOrder = () => {
               ))}
               <Divider />
             </List>
+            <AddressDisplay />
             <Button colorScheme="red" onClick={handleClearCart}>
               Clear Cart
             </Button>
