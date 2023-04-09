@@ -1,13 +1,22 @@
-import { LOCAL_STORAGE_KEYS, PAGE_ROUTES } from '@/utils/constanats';
-import localStoreHelper from '@/utils/localStoreHelper';
-import numberHelper from '@/utils/numberHelper';
-import { Box, Button, Center, Container, Divider, Heading, Image, List, ListItem, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import { useGetCartItems } from '../../../hooks/useGetCartItems';
-import { createOrder } from '@/utils/api';
-import { useState } from 'react';
-import axios from 'axios';
-import getStripe from '@/utils/get-stripe';
+import { LOCAL_STORAGE_KEYS, PAGE_ROUTES } from "@/utils/constanats";
+import localStoreHelper from "@/utils/localStoreHelper";
+import numberHelper from "@/utils/numberHelper";
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Divider,
+  Heading,
+  Image,
+  List,
+  ListItem,
+  Text,
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useGetCartItems } from "../../../hooks/useGetCartItems";
+import { createOrder } from "@/utils/api";
+import { useState } from "react";
 
 const NewOrder = () => {
   const router = useRouter();
@@ -31,7 +40,7 @@ const NewOrder = () => {
       console.error(error);
     } finally {
       setIsLoading(false);
-    };
+    }
   };
 
   if (isLoading) {
@@ -44,39 +53,47 @@ const NewOrder = () => {
 
   return (
     <Box m={10}>
-        <Container maxW="container.xl">
-          <Heading as="h1" size="lg" mb={4}>
-            Your Cart
-          </Heading>
-          {cartProducts.length === 0 ? (
-            <Text>Your cart is empty.</Text>
-          ) : (
-            <>
-              <List spacing={3} mb={4}>
-                {cartProducts.map((item) => (
-                  <>
-                    <Divider />
-                    <ListItem key={item.id} display="flex" alignItems="center">
-                      <Image src={item.img} alt={item.name} boxSize="8em" objectFit="contain" mr={4} />
-                      <Box>
-                        <Text>{item.name}</Text>
-                        <Text>{numberHelper.formatCurrency(item.price, item.currency)}</Text>
-                      </Box>
-                    </ListItem>
-                  </>
-                ))}
-                <Divider />
-              </List>
-              <Button colorScheme="red" onClick={handleClearCart}>
-                Clear Cart
-              </Button>
-              <Button ml={4} onClick={handleCheckout}>
-                Make order and checkout
-              </Button>
-            </>
-          )}
-        </Container>
-      </Box>
+      <Container maxW="container.xl">
+        <Heading as="h1" size="lg" mb={4}>
+          Your Cart
+        </Heading>
+        {cartProducts.length === 0 ? (
+          <Text>Your cart is empty.</Text>
+        ) : (
+          <>
+            <List spacing={3} mb={4}>
+              {cartProducts.map((item) => (
+                <>
+                  <Divider />
+                  <ListItem key={item.id} display="flex" alignItems="center">
+                    <Image
+                      src={item.img}
+                      alt={item.name}
+                      boxSize="8em"
+                      objectFit="contain"
+                      mr={4}
+                    />
+                    <Box>
+                      <Text>{item.name}</Text>
+                      <Text>
+                        {numberHelper.formatCurrency(item.price, item.currency)}
+                      </Text>
+                    </Box>
+                  </ListItem>
+                </>
+              ))}
+              <Divider />
+            </List>
+            <Button colorScheme="red" onClick={handleClearCart}>
+              Clear Cart
+            </Button>
+            <Button ml={4} onClick={handleCheckout}>
+              Make order and checkout
+            </Button>
+          </>
+        )}
+      </Container>
+    </Box>
   );
 };
 

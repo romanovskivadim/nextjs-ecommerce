@@ -15,9 +15,11 @@ const Orders = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const localStoreUser = localStoreHelper.getLocalStorageItem<IUser>(LOCAL_STORAGE_KEYS.user);
-    
-    if(localStoreUser) {
+    const localStoreUser = localStoreHelper.getLocalStorageItem<IUser>(
+      LOCAL_STORAGE_KEYS.user
+    );
+
+    if (localStoreUser) {
       const fetchOrders = async () => {
         try {
           const orders = await getOrders(localStoreUser);
@@ -32,7 +34,6 @@ const Orders = () => {
     } else {
       router.push(PAGE_ROUTES.login);
     }
-
   }, []);
 
   return (
