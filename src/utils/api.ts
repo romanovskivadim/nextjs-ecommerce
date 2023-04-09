@@ -37,7 +37,7 @@ const BASE_URL = {
   orders: "/orders",
 };
 
-const API_ROUTES = {
+export const API_ROUTES = {
   SIGN_UP: `${BASE_URL.auth}/sign-up`,
   LOG_IN: `${BASE_URL.auth}/sign-in`,
   LOG_OUT: `${BASE_URL.auth}/sign-out`,
@@ -45,6 +45,7 @@ const API_ROUTES = {
   PRODUCT: (id: string) => `${BASE_URL.products}/${id}`,
   ORDERS: `${BASE_URL.orders}`,
   ORDER: (id: string) => `${BASE_URL.orders}/${id}`,
+  ORDERS_STREAM: (id: string) => `${BASE_URL.orders}/${id}/stream`,
 };
 
 export const signup = async (data: ISignupPayload): Promise<void> => {
@@ -131,8 +132,6 @@ export const createOrder = async (
 
     return response.data;
   } catch (error) {
-    console.error(error);
-
     throw new Error();
   }
 };

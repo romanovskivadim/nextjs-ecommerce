@@ -8,6 +8,7 @@ import localStoreHelper from "@/utils/localStoreHelper";
 import { IUser } from "@/types/IUser";
 import { LOCAL_STORAGE_KEYS, PAGE_ROUTES } from "@/utils/constanats";
 import { useRouter } from "next/router";
+import OrdersEventStream from "@/utils/ordersSse";
 
 const Orders = () => {
   const router = useRouter();
@@ -18,6 +19,8 @@ const Orders = () => {
     const localStoreUser = localStoreHelper.getLocalStorageItem<IUser>(
       LOCAL_STORAGE_KEYS.user
     );
+
+    const ordersEventStream = new OrdersEventStream();
 
     if (localStoreUser) {
       const fetchOrders = async () => {
@@ -31,9 +34,18 @@ const Orders = () => {
       };
 
       fetchOrders();
+      ordersEventStream.connect();
+      ordersEventStream.subscribe((order) => {
+        setOrders(order);
+      });
     } else {
       router.push(PAGE_ROUTES.login);
     }
+
+    return () => {
+      ordersEventStream.unsubscribe();
+      ordersEventStream.disconnect();
+    };
   }, []);
 
   return (
